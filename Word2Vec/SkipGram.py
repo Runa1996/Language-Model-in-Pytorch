@@ -9,16 +9,15 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 
+
 class Word2Vec(nn.Module):
-    def __init__(self, vocab_size, embed_size, padding_idx, save_path):
+    def __init__(self, vocab_size, embed_size, save_path):
         super(Word2Vec, self).__init__()
         self.vocab_size = vocab_size
         self.embed_size = embed_size
-        self.padding_idx = padding_idx
         self.save_emb_data = save_path
-        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        self.center_vec = nn.Embedding(self.vocab_size, self.embed_size, padding_idx=self.padding_idx)
-        self.context_vec = nn.Embedding(self.vocab_size, self.embed_size, padding_idx=self.padding_idx)
+        self.center_vec = nn.Embedding(self.vocab_size, self.embed_size)
+        self.context_vec = nn.Embedding(self.vocab_size, self.embed_size)
         self.init_embedding()
 
     def init_embedding(self):
