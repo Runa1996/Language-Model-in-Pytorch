@@ -57,12 +57,12 @@ class TrainProcess:
             iter_times = 0
             for i, (pos_u, pos_v, neg_v) in (enumerate(train_loader)):
                 optimizer.zero_grad()
-                loss = model(pos_u, pos_v, neg_v)
+                loss = model.forward(pos_u, pos_v, neg_v)
                 loss.backward()
                 optimizer.step()
 
                 if iter_times % 100 == 0:
-                    print("Batch:{:>2d}\tIter:{:>2d}\tLoss:{:>5.4%}".format(batch, iter_times, loss))
+                    print("Batch:{:>2d}\tIter:{:>2d}\tLoss:{:>5.4}".format(batch, iter_times, loss))
                 if batch >= 3 and iter_times % 20000 == 0:
                     lr = self.lr * (1.0 - batch / 20)
                     for params in optimizer.param_groups:

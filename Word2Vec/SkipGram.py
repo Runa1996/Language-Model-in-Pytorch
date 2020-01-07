@@ -27,14 +27,14 @@ class Word2Vec(nn.Module):
 
     def forward(self, pos_u, pos_v, neg_v):
         loss = []
-        embedding_u = self.center_vec(torch.tensor(pos_u, dtype=torch.long, requires_grad=True))
-        embedding_v = self.context_vec(torch.tensor(pos_v, dtype=torch.long, requires_grad=True))
-        embedding_neg = self.context_vec(torch.tensor(neg_v, dtype=torch.long, requires_grad=True))
+        embedding_u = self.center_vec(pos_u)
+        embedding_v = self.context_vec(pos_v)
+        embedding_neg = self.context_vec(neg_v)
         score = torch.mul(embedding_u, embedding_v).squeeze()
-        score = torch.sum(score, sim=1)
-        score = F.logsigmoid(sum(score))
+        score = torch.sum(score, dim=1)
+        score = F.logsigmoid(score)
         loss.append(sum(score))
-        neg_score = torch.mul(embedding_neg, embedding_u).squeeze()
+        neg_score = torch.bmm(embedding_neg, embedding_u.unsqueeze(2)).squeeze()
         neg_score = torch.sum(neg_score, dim=1)
         neg_score = F.logsigmoid(-1 * neg_score)
         loss.append(sum(neg_score))
